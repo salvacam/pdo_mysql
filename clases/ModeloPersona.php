@@ -82,14 +82,15 @@ class ModeloPersona {
         $sql = "select count(*) from $this->tabla where $condicion";
         $r = $this->bd->setConsulta($sql, $parametros);
         if ($r) {
-            return $this->bd->getFila()[0];
+            //return $this->bd->getFila()[0];
+            return $this->bd->getFila();
         }
         return -1;
     }
 
-    function getList($condicion = "1=1", $parametros = array()) {
+    function getList($condicion = "1=1", $parametros = array(), $orderBy = "1") {
         $list = array(); //$list = [];
-        $sql = "select * from $this->tabla where $condicion";
+        $sql = "select * from $this->tabla where $condicion order by $orderBy";
         $r = $this->bd->setConsulta($sql, $parametros);
         if ($r) {
             while ($fila = $this->bd->getFila()) {
@@ -103,14 +104,24 @@ class ModeloPersona {
         return $list;
     }
 
-    function selectHtml($id, $name, $condicion, $parametros, 
-            $valorSeleccionado="", $blanco=TRUE, $textoBlanco="&nbsp" ){
+    function selectHtml($id, $name, $condicion, $parametros, $orderBy = "1", 
+            $valorSeleccionado = "", $blanco = TRUE, $textoBlanco = "&nbsp") {
         $select = "<select name='name' id='id'>";
-        if($blanco){            
+        if ($blanco) {
             $select .= "<option value=''>$textoBlanco</option>";
         }
         //while y añado todos los option que quiera (hacerlo con el getList)
+        $lista = $this->getList($condicion, $parametros, $orderBy);
+        foreach ($lista as $objeto) {
+            $selected = "";
+            if ($objeto->getId() == $valorSeleccionado) {
+                $selected = "selected";
+            }
+            $select .= "<option $selected value='" . $objeto->getId() . "'>"
+                    . $objeto->getApellidos . ", " . $objeto->getNombre() . "</option>";
+        }
         $select .= "</select>";
         return $select;
     }
+
 }

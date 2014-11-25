@@ -20,13 +20,17 @@ class Leer {
      * @return string|array|null Devuelve una cadena con el valor del parámetro, null si
      * el parámetro no se ha pasado o un array si el parametro es múltiple.
      */
-    public static function get($param) {
+    public static function get($param, $filtrar = true) {
         if (isset($_GET[$param])) {
             $v = $_GET[$param];
             if (is_array($v)) {
                 return Leer::leerArray($v);
             } else {
-                return Leer::limpiar($v);
+                if ($filtrar) {
+                    return Leer::limpiar($v);
+                } else {
+                    return $v;
+                }
             }
             /*
               if ($_GET[$param] === "") {
@@ -68,37 +72,45 @@ class Leer {
          */
     }
 
-    private static function leerArray($param) {
+    private static function leerArray($param, $filtrar = true) {
         $array = array();
         foreach ($param as $key => $value) {
-            $array[] = Leer::limpiar($value);
+            if ($filtrar) {
+                $array[] = Leer::limpiar($value);
+            } else {
+                $array[] = $value;
+            }
         }
         return $array;
     }
 
-    public static function post($param) {
+    public static function post($param, $filtrar = true) {
         if (isset($_POST[$param])) {
             $v = $_POST[$param];
             if (is_array($v)) {
                 return Leer::leerArray($v);
             } else {
-                return Leer::limpiar($v);
+                if ($filtrar) {
+                    return Leer::limpiar($v);
+                } else {
+                    return $v;
+                }
             }
         } else {
             return null;
         }
     }
 
-    public static function request($param) {
-        $v = Leer::get($param);
+    public static function request($param, $filtrar = true) {
+        $v = Leer::get($param, $filtrar);
         if ($v == null) {
-            $v = Leer::post($param);
+            $v = Leer::post($param, $filtrar);
         }
         return $v;
     }
 
     private static function limpiar($param) {
-        return $param;
+        return trim(htmlspecialchars($param));
     }
 
 }
