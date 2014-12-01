@@ -1,8 +1,14 @@
 <?php
 require '../require/comun.php';
+$pagina=0;
+if(Leer::get("pagina")!= null){
+    $pagina = Leer::get("pagina");
+}
 $bd = new BaseDatos();
 $modelo = new ModeloPersona($bd);
-$filas = $modelo->getList();
+$filas = $modelo->getList($pagina);
+$paginas= $modelo->getNumeroPaginas();
+$enlaces = Util::getEnlacesPaginacion($pagina, $paginas);
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,8 +33,21 @@ $filas = $modelo->getList();
                        href='phpUpdate.php?id=<?php echo $objeto->getId();?>'>editar</a></td>
             </tr>
         <?php
-        }
+        }        
         ?>        
+            <tr>
+                <td colspan="5">                    
+                    <?php echo $enlaces["inicio"]; ?>
+                    <?php echo $enlaces["anterior"]; ?>
+                    <?php echo $enlaces["primero"]; ?>
+                    <?php echo $enlaces["segundo"]; ?>
+                    <?php echo $enlaces["actual"]; ?>
+                    <?php echo $enlaces["cuarto"]; ?>
+                    <?php echo $enlaces["quinto"]; ?>
+                    <?php echo $enlaces["siguiente"]; ?>
+                    <?php echo $enlaces["ultimo"]; ?>
+                </td>
+            </tr>
         </table>
         <br/>
         Sección 2: Formulario insertar<br/>

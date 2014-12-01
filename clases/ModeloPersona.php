@@ -88,9 +88,14 @@ class ModeloPersona {
         return -1;
     }
 
-    function getList($condicion = "1=1", $parametros = array(), $orderBy = "1") {
+    function getNumeroPaginas($rpp=  Configuracion::RPP){
+        return (ceil($this->count()[0] / $rpp) -1);
+    }
+            
+    function getList($pagina=0, $rpp=  Configuracion::RPP, $condicion = "1=1", $parametros = array(), $orderBy = "1") {
         $list = array(); //$list = [];
-        $sql = "select * from $this->tabla where $condicion order by $orderBy";
+        $principio = $pagina * $rpp;
+        $sql = "select * from $this->tabla where $condicion order by $orderBy limit $principio, $rpp";
         $r = $this->bd->setConsulta($sql, $parametros);
         if ($r) {
             while ($fila = $this->bd->getFila()) {

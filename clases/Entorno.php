@@ -17,6 +17,10 @@ class Entorno {
     private function __construct() {
         
     }
+    
+    static function getEnlaceCarpeta($pagina=""){
+        return "http://".self::getServidor().":".self::getPuerto().self::getCarpetaServidor().$pagina;
+    }
 
     static function getServidor() {
         return $_SERVER["SERVER_NAME"];

@@ -1,7 +1,7 @@
 <?php
 
 class ModeloUsuario {
-    
+
     //Implementamos los métodos que necesitamos para trabajar con la persona
     private $bd = null;
     private $tabla = "usuario";
@@ -15,9 +15,9 @@ class ModeloUsuario {
                 . ":apellidos, :email, curdate(), :isactivo, :isroot, :rol,"
                 . "null );";
         $parametros["login"] = $objeto->getLogin();
-        $parametros["clave"] = $objeto->getClave();
+        $parametros["clave"] = sha1($objeto->getClave());
         $parametros["nombre"] = $objeto->getNombre();
-        $parametros["apellidos"] = $objeto->getApellidos();        
+        $parametros["apellidos"] = $objeto->getApellidos();
         $parametros["email"] = $objeto->getEmail();
         //$parametros["fechaalta"] = $objeto->getFechaalta();
         //$fecha = new DateTime(null, new DateTimeZone('Europe/Madrid'));
@@ -32,6 +32,37 @@ class ModeloUsuario {
             return -1;
         }
         return $r; //return 1 si se ha insertado     
+    }
+
+    function alta(Usuario $objeto) {
+        $sql = "insert into $this->tabla values (:login, :clave, :nombre, "
+                . ":apellidos, :email, curdate(), :isactivo, :isroot, :rol,"
+                . "null );";
+        $parametros["login"] = $objeto->getLogin();
+        $parametros["clave"] = $objeto->getClave();
+        $parametros["nombre"] = $objeto->getNombre();
+        $parametros["apellidos"] = $objeto->getApellidos();
+        $parametros["email"] = $objeto->getEmail();
+        $parametros["isactivo"] = 0;
+        $parametros["isroot"] = 0;
+        $parametros["rol"] = "usuario";
+        $r = $this->bd->setConsulta($sql, $parametros);
+        if (!$r) {
+            return -1;
+        }
+        //mandar correo
+        
+        return $r; //return 1 si se ha insertado     
+    }
+
+    function activar($login) {
+        $sql = "update $this->tabla set isactivo=1 where login=:login;";
+        $parametros["login"] = $login;
+        $r = $this->bd->setConsulta($sql, $parametros);
+        if (!$r) {
+            return -1;
+        }
+        return $this->bd->getNumeroFilas();
     }
 
     function delete(Usuario $objeto) {
@@ -49,19 +80,19 @@ class ModeloUsuario {
     }
 
     //clave principal autonumérica
-  /*  function edit(Persona $objeto) {
-        $sql = "update $this->tabla set nombre=:nombre, "
-                . "apellidos=:apellidos where id=:id;";
-        $parametros["nombre"] = $objeto->getNombre();
-        $parametros["apellidos"] = $objeto->getApellidos();
-        $parametros["id"] = $objeto->getId();
-        $r = $this->bd->setConsulta($sql, $parametros);
-        if (!$r) {
-            return -1;
-        }
-        return $this->bd->getNumeroFilas();
-    }
-*/
+    /*  function edit(Persona $objeto) {
+      $sql = "update $this->tabla set nombre=:nombre, "
+      . "apellidos=:apellidos where id=:id;";
+      $parametros["nombre"] = $objeto->getNombre();
+      $parametros["apellidos"] = $objeto->getApellidos();
+      $parametros["id"] = $objeto->getId();
+      $r = $this->bd->setConsulta($sql, $parametros);
+      if (!$r) {
+      return -1;
+      }
+      return $this->bd->getNumeroFilas();
+      }
+     */
     //clave principal no autonumérica
     //function editPK(Usuario $objetoOriginal, Usuario $objetoNuevo) {
     function editPK(Usuario $objeto, $loginpk) {
@@ -74,7 +105,7 @@ class ModeloUsuario {
         $parametros["login"] = $objeto->getLogin();
         $parametros["clave"] = $objeto->getClave();
         $parametros["nombre"] = $objeto->getNombre();
-        $parametros["apellidos"] = $objeto->getApellidos();        
+        $parametros["apellidos"] = $objeto->getApellidos();
         $parametros["email"] = $objeto->getEmail();
         //$parametros["fechaalta"] = $objeto->getFechaalta();
         $parametros["isactivo"] = $objeto->getIsactivo();
@@ -129,8 +160,7 @@ class ModeloUsuario {
         return $list;
     }
 
-    function selectHtml($id, $name, $condicion, $parametros, $orderBy = "1", 
-            $valorSeleccionado = "", $blanco = TRUE, $textoBlanco = "&nbsp") {
+    function selectHtml($id, $name, $condicion, $parametros, $orderBy = "1", $valorSeleccionado = "", $blanco = TRUE, $textoBlanco = "&nbsp") {
         $select = "<select name='name' id='id'>";
         if ($blanco) {
             $select .= "<option value=''>$textoBlanco</option>";
@@ -143,8 +173,8 @@ class ModeloUsuario {
                 $selected = "selected";
             }
             $select .= "<option $selected value='" . $objeto->getLogin() . "'>"
-                    . $objeto->getNombre() . ", " . $objeto->getApellidos() 
-                    . $objeto->getEmail() . ", " . $objeto->getFechaalta() 
+                    . $objeto->getNombre() . ", " . $objeto->getApellidos()
+                    . $objeto->getEmail() . ", " . $objeto->getFechaalta()
                     . $objeto->getIsactivo() . ", " . $objeto->getIsroot()
                     . $objeto->getFechalogin() . "</option>";
         }

@@ -37,13 +37,13 @@ require '../require/comun.php';
             echo "No es una fecha  <br/>";            
         }
         
-        
+        */
         if(Validar::isDNI($texto)){
             echo "es un dni  <br/>";
         } else {
             echo "No es un dni  <br/>";            
         }
-        
+        /*
         $l= 20;
         if(Validar::isLongitudMinima($texto, $l)){
             echo "es mayor o igual de $l caracteres <br/>";

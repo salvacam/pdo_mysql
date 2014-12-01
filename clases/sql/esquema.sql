@@ -36,3 +36,5 @@ CREATE TABLE IF NOT EXISTS `usuario` (
     `rol` enum('administrador', 'usuario') NOT NULL DEFAULT 'usuario',
     `fechalogin` datetime    
 ) ENGINE=InnoDB;
+
+insert ignore into persona select null, concat(nombre, now()), concat(id, apellidos,now()) from persona;

@@ -57,6 +57,16 @@ class BaseDatos {
     }
 
     /**
+     * Devuelve el mensaje de error de la sentencia sql 
+     * @access public
+     * @return string devuelve el mensaje de error de la sentencia sql
+     */
+    function getError(){
+        return $this->sentencia->errorInfo[2];
+    }
+
+
+    /**
      * Devuelve la siguiente fila del último select ejecutado 
      * @access public
      * @return array|null devuelve un array asociativo con los campos de la consulta
