@@ -120,6 +120,18 @@ class ModeloUsuario {
         }
         return $this->bd->getNumeroFilas();
     }
+    
+    function activa($id) {
+        $sql = "update usuario "
+                . "set isactivo = 1 "
+                . "where md5(concat(email,'".Configuracion::PEZARANA."',login))=:id;";
+        $parametros["id"] = $id;
+        $r = $this->bd->setConsulta($sql, $parametros);
+        if (!$r) {
+            return -1;
+        }
+        return $this->bd->getNumeroFilas();
+    }
 
     //le paso el id y me devuelve el objeto completo
     function get($login) {

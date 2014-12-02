@@ -88,8 +88,10 @@ class ModeloPersona {
         return -1;
     }
 
+    //poner en la clase util
     function getNumeroPaginas($rpp=  Configuracion::RPP){
-        return (ceil($this->count()[0] / $rpp) -1);
+        $lista = $this->count();
+        return (ceil($lista[0] / $rpp) - 1);
     }
             
     function getList($pagina=0, $rpp=  Configuracion::RPP, $condicion = "1=1", $parametros = array(), $orderBy = "1") {

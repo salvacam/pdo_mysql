@@ -8,7 +8,9 @@ $bd = new BaseDatos();
 $modelo = new ModeloPersona($bd);
 $filas = $modelo->getList($pagina);
 $paginas= $modelo->getNumeroPaginas();
-$enlaces = Util::getEnlacesPaginacion($pagina, $paginas);
+//$enlaces = Util::getEnlacesPaginacion($pagina, $paginas);
+$total = $modelo->count();
+$enlaces = Util::getEnlacesPaginacion2($pagina, $total[0]);
 ?>
 <!DOCTYPE html>
 <html>

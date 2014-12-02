@@ -2,7 +2,7 @@
 
 class Util {
 
-    static function getEnlacesPaginacion($pagina, $paginas, $url = "") {
+    static function getEnlacesPaginacion($pagina, $paginas, $url = "") { //pagina, los registros que hay, y los que muestra 
         $enlaces = array();
         $enlaces["inicio"] = '&Lt;';
         $enlaces["anterior"] = '&lt;';
@@ -16,7 +16,7 @@ class Util {
         if (strpos($url, "?") !== false) {
             $url .= "&";
         } else {
-            $url .= "?";         
+            $url .= "?";
         }
         if ($pagina > 1 && $pagina < $paginas - 1) {
             $enlaces["inicio"] = "<a href='" . $url . "pagina=0'>&Lt;</a>";
@@ -28,7 +28,7 @@ class Util {
             $enlaces["quinto"] = "<a href='" . $url . "pagina=" . ($pagina + 2) . "'>" . ($pagina + 3) . "</a>";
             $enlaces["siguiente"] = "<a href='" . $url . "pagina=" . ($pagina + 1) . "'>&gt;</a>";
             $enlaces["ultimo"] = "<a href='" . $url . "pagina=" . $paginas . "'>&Gt;</a>";
-        } else if ($pagina == 0) {            
+        } else if ($pagina == 0) {
             $enlaces["inicio"] = "&Lt;";
             $enlaces["anterior"] = "&lt;";
             $enlaces["primero"] = "1";
@@ -102,6 +102,89 @@ class Util {
             $enlaces["ultimo"] = '&Gt;';
         }
         return $enlaces;
+    }
+
+    static function getEnlacesPaginacion2($pagina, $total, $rpp = Configuracion::RPP, $url = "") { //pagina, los registros que hay, y los que muestra 
+        $enlaces = array();
+        echo $total . " " . $rpp;
+        $paginas = ceil($total / $rpp) - 1;
+
+        if ($pagina < 0) {
+            $pagina = 0;
+        }
+        if ($pagina > $paginas) {
+            $pagina = $paginas;
+        }
+        $inicio = 0;
+        $fin = $paginas;
+        
+        if (strpos($url, "?") !== false) {
+            $url .= "&";
+        } else {
+            $url .= "?";
+        }
+        if ($pagina > 1 && $pagina < $paginas - 1) {
+            $enlaces["inicio"] = self::getEnlace($inicio, $paginas, $url, '&Lt;');
+            $enlaces["anterior"] = self::getEnlace($pagina - 1, $paginas, $url, '&lt;');
+            $enlaces["primero"] = self::getEnlace($pagina - 2, $paginas, $url);
+            $enlaces["segundo"] = self::getEnlace($pagina - 1, $paginas, $url);
+            $enlaces["actual"] = ($pagina + 1);
+            $enlaces["cuarto"] = self::getEnlace($pagina + 1, $paginas, $url);
+            $enlaces["quinto"] = self::getEnlace($pagina + 2, $paginas, $url);
+            $enlaces["siguiente"] = self::getEnlace($pagina + 1, $paginas, $url, '&gt;');
+            $enlaces["ultimo"] = self::getEnlace($fin, $paginas, $url, '&Gt;');
+        } else if ($pagina == 0) {
+            $enlaces["inicio"] = self::getEnlace($inicio, $paginas, $url, '&Lt;');
+            $enlaces["anterior"] = self::getEnlace($inicio, $paginas, $url, '&lt;');
+            $enlaces["primero"] = ($pagina + 1);
+            $enlaces["segundo"] = self::getEnlace($pagina + 1, $paginas, $url);
+            $enlaces["actual"] = self::getEnlace($pagina + 2, $paginas, $url);
+            $enlaces["cuarto"] = self::getEnlace($pagina + 3, $paginas, $url);
+            $enlaces["quinto"] = self::getEnlace($pagina + 4, $paginas, $url);
+            $enlaces["siguiente"] = self::getEnlace($pagina + 1, $paginas, $url, '&gt;');
+            $enlaces["ultimo"] = self::getEnlace($fin, $paginas, $url, '&Gt;');
+        } else if ($pagina == 1) {
+            $enlaces["inicio"] = self::getEnlace($inicio, $paginas, $url, '&Lt;');
+            $enlaces["anterior"] = self::getEnlace($pagina - 1, $paginas, $url, '&lt;');
+            $enlaces["primero"] = self::getEnlace($pagina - 1, $paginas, $url);
+            $enlaces["segundo"] = ($pagina + 1);
+            $enlaces["actual"] = self::getEnlace($pagina + 2, $paginas, $url);
+            $enlaces["cuarto"] = self::getEnlace($pagina + 3, $paginas, $url);
+            $enlaces["quinto"] = self::getEnlace($pagina + 4, $paginas, $url);
+            $enlaces["siguiente"] = self::getEnlace($pagina + 1, $paginas, $url, '&gt;');
+            $enlaces["ultimo"] = self::getEnlace($fin, $paginas, $url, '&Gt;');
+        } else if ($pagina == $paginas - 1) {
+            $enlaces["inicio"] = self::getEnlace($inicio, $paginas, $url, '&Lt;');
+            $enlaces["anterior"] = self::getEnlace($pagina - 1, $paginas, $url, '&lt;');
+            $enlaces["primero"] = self::getEnlace($pagina - 3, $paginas, $url);
+            $enlaces["segundo"] = self::getEnlace($pagina - 2, $paginas, $url);
+            $enlaces["actual"] = self::getEnlace($pagina - 1, $paginas, $url);
+            $enlaces["cuarto"] = $pagina + 1;
+            $enlaces["quinto"] = self::getEnlace($pagina + 1, $paginas, $url);
+            $enlaces["siguiente"] = self::getEnlace($pagina + 1, $paginas, $url, '&gt;');
+            $enlaces["ultimo"] = self::getEnlace($fin, $paginas, $url, '&Gt;');
+        } else if ($pagina == $paginas) {
+            $enlaces["inicio"] = self::getEnlace($inicio, $paginas, $url, '&Lt;');
+            $enlaces["anterior"] = self::getEnlace($pagina - 1, $paginas, $url, '&lt;');
+            $enlaces["primero"] = self::getEnlace($pagina - 4, $paginas, $url);
+            $enlaces["segundo"] = self::getEnlace($pagina - 3, $paginas, $url);
+            $enlaces["actual"] = self::getEnlace($pagina - 2, $paginas, $url);
+            $enlaces["cuarto"] = self::getEnlace($pagina - 1, $paginas, $url);
+            $enlaces["quinto"] = $pagina + 1;
+            $enlaces["siguiente"] = self::getEnlace($fin, $paginas, $url, '&gt;');
+            $enlaces["ultimo"] = self::getEnlace($fin, $paginas, $url, '&Gt;');
+        }
+        return $enlaces;
+    }
+
+    private static function getEnlace($pagina, $paginas, $url, $paginaUsuario = null) {
+        if ($pagina < 0)
+            return "";
+        if ($pagina > $paginas+1)
+            return "";
+        if ($paginaUsuario == null)
+            $paginaUsuario = $pagina + 1;
+        return "<a href='" . $url . "pagina=$pagina'>$paginaUsuario</a>";
     }
 
 }
