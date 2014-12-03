@@ -1,5 +1,6 @@
 <?php
 require '../require/comun.php';
+$sesion->administrador("../usuario/");
 $bd = new BaseDatos();
 $modelo = new ModeloUsuario($bd);
 $filas = $modelo->getList();

@@ -1,5 +1,6 @@
 <?php
 require '../require/comun.php';
+$sesion->administrador("../usuario/");
 $bd = new BaseDatos();
 
 $login = Leer::post("login");
@@ -7,10 +8,11 @@ $clave = Leer::post("clave");
 $nombre = Leer::post("nombre");
 $apellidos = Leer::post("apellidos");
 $email = Leer::post("email");
-$isactivo = 0;
-if(isset($_POST["isactivo"])){    
-    $isactivo = 1;
-}
+$isactivo = Leer::post("isactivo");
+echo $isactivo;
+//if(isset($_POST["isactivo"])){    
+  //  $isactivo = 1;
+//}
 $isroot = 0;
 if(isset($_POST["isroot"])){    
     $isroot = 1;

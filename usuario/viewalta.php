@@ -1,9 +1,18 @@
+<?php
+require '../require/comun.php';
+$error = Leer::get("error");
+?>
 <!DOCTYPE html>
 <html> <head>
         <meta charset="UTF-8">
         <title>Alta Usuario</title>
     </head>
     <body>
+        <?php 
+            if ($error == -1){
+                echo "Error al crear el usuario";
+            }
+        ?>
         <form action="phpAlta.php" method="POST">            
             <label for="login">Login</label>                
             <input type="text" name="login" value="" id="login" required/>
@@ -18,6 +27,7 @@
             <label for="email">Email</label>
             <input type="email" name="email" value="" id="email" required/>               
             <!--comprobar por javascript los valores, que la clave coincida-->
+            <input type="reset" value="limpiar"/>
             <input type="submit" value="Alta" />
         </form>
     </body>

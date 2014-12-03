@@ -1,5 +1,6 @@
 <?php
 require '../require/comun.php';
+$sesion->administrador("../usuario/");
 $bd = new BaseDatos();
 $id = Leer::request("id");
 $modelo = new ModeloUsuario($bd);

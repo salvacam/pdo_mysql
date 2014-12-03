@@ -1,5 +1,6 @@
 <?php
 require '../require/comun.php';
+$sesion->administrador("../usuario/");
 $bd = new BaseDatos();
 $login = Leer::request("login");
 $modelo = new ModeloUsuario($bd);
@@ -13,7 +14,7 @@ $bd->closeConexion();
         <script src="../js/main.js"></script>
     </head>
     <body>
-        <form action="<?php echo(isset($login) ? "phpUpdate.php" :  "phpInsert.php"); ?>" method="POST">            
+        <form action="<?php echo(isset($login) ? "phpUpdate.php" : "phpInsert.php"); ?>" method="POST">            
             <input type="hidden" name="loginpk" id="loginpk" value="<?php echo $usuario->getLogin(); ?>"/>
             <input type="text" name="login" value="<?php echo $usuario->getLogin() ?>" id="login" placeholder="login" required/>
             <input type="password" name="clave" value="<?php echo $usuario->getClave() ?>" id="clave" placeholder="clave" required/>
@@ -21,19 +22,25 @@ $bd->closeConexion();
             <input type="text" name="apellidos" value="<?php echo $usuario->getApellidos() ?>" id="apellidos" placeholder="apellidos" required/>
             <input type="email" name="email" value="<?php echo $usuario->getEmail() ?>" id="email" placeholder="email" required/>            
             <!--<input type="hidden" name="isactivo" value="0" id="isactivo" />-->
-            <br/><input type="checkbox" name="isactivo" id="isactivo" 
-                <?php if ($usuario->getIsactivo()) echo "checked"; ?> />
+            <br/>
+            <!--<input type="checkbox" name="isactivo" id="isactivo" 
+                        <?php //if ($usuario->getIsactivo()) echo "checked"; ?> />-->
             <label for="isactivo">Activo</label>
+            <select name="isactivo">
+                <option value="0" <?php if ($usuario->getIsactivo() == 0) echo "selected"; ?> >No</option>
+                <option value="1" <?php if ($usuario->getIsactivo() == 1) echo "selected"; ?> >Si</option>                
+                <option value="-1" <?php if ($usuario->getIsactivo() == -1) echo "selected"; ?> >Baneado</option>
+            </select>
             <!--<input type="hidden" name="isroot" value="0" id="isroot" />-->            
             <input type="checkbox" name="isroot" id="isroot"
-                <?php if ($usuario->getIsactivo()) echo "checked"; ?> />
+                   <?php if ($usuario->getIsactivo()) echo "checked"; ?> />
             <label for="isroot">Root</label>
             <select name="rol" id="rol">
                 <option id="usuario" value="usuario" selected="">Usuario</option>
                 <option id="aministrador" value="administrador">Administrador</option>
             </select>
             <!--<input type="hidden" name="rol" value="usuario" id="rol" />-->
-            <input type="submit" value="<?php echo(isset($login) ? "Editar" :  "Alta"); ?>" />
+            <input type="submit" value="<?php echo(isset($login) ? "Editar" : "Alta"); ?>" />
         </form>
     </body>
 </html>

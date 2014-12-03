@@ -51,18 +51,8 @@ class ModeloUsuario {
             return -1;
         }
         //mandar correo
-        
-        return $r; //return 1 si se ha insertado     
-    }
 
-    function activar($login) {
-        $sql = "update $this->tabla set isactivo=1 where login=:login;";
-        $parametros["login"] = $login;
-        $r = $this->bd->setConsulta($sql, $parametros);
-        if (!$r) {
-            return -1;
-        }
-        return $this->bd->getNumeroFilas();
+        return $r; //return 1 si se ha insertado     
     }
 
     function delete(Usuario $objeto) {
@@ -103,7 +93,7 @@ class ModeloUsuario {
                 //. "fechalogin=:fechalogin "
                 . "where login=:loginpk;";
         $parametros["login"] = $objeto->getLogin();
-        $parametros["clave"] = $objeto->getClave();
+        $parametros["clave"] = sha1($objeto->getClave());
         $parametros["nombre"] = $objeto->getNombre();
         $parametros["apellidos"] = $objeto->getApellidos();
         $parametros["email"] = $objeto->getEmail();
@@ -120,17 +110,92 @@ class ModeloUsuario {
         }
         return $this->bd->getNumeroFilas();
     }
-    
+
+    function editConClave(Usuario $objeto, $loginpk, $claveold) {
+        $asignacion = "login=:login, clave=:clave, "
+                . "nombre=:nombre, apellidos=:apellidos, "
+                . "email=:email";
+        $condicion = "login=:loginpk and clave=:claveold";
+        $parametros["login"] = $objeto->getLogin();
+        $parametros["clave"] = sha1($objeto->getClave());
+        $parametros["nombre"] = $objeto->getNombre();
+        $parametros["apellidos"] = $objeto->getApellidos();
+        $parametros["email"] = $objeto->getEmail();
+        $parametros["loginpk"] = $loginpk;
+        $parametros["claveold"] = $claveold;
+        return $this->editConsulta($asignacion, $condicion, $parametros);
+    }
+
+    function editSinClave(Usuario $objeto, $loginpk) {
+        $asignacion = "login=:login,"
+                . "nombre=:nombre, apellidos=:apellidos,"
+                . "email=:email";
+        $condicion = "login=:loginpk";
+        $parametros["login"] = $objeto->getLogin();
+        $parametros["nombre"] = $objeto->getNombre();
+        $parametros["apellidos"] = $objeto->getApellidos();
+        $parametros["email"] = $objeto->getEmail();
+        $parametros["loginpk"] = $loginpk;
+        
+        return $this->editConsulta($asignacion, $condicion, $parametros);
+    }
+
+    function desactivar($loginpk) {
+        $sql = "update $this->tabla set isactivo=0 where login=:login;";
+        $parametros["login"] = $loginpk;
+        $r = $this->bd->setConsulta($sql, $parametros);
+        if (!$r) {
+            return -1;
+        }
+        return $this->bd->getNumeroFilas();
+    }
+
+    function editConsulta($asignacion, $condicion = "1=1", $parametros = array()) {
+        $sql = "update $this->tabla set $asignacion where $condicion"; 
+        $r = $this->bd->setConsulta($sql, $parametros);
+        if (!$r) {
+            return -1;
+        }
+        return $this->bd->getNumeroFilas();
+    }
+
     function activa($id) {
         $sql = "update usuario "
                 . "set isactivo = 1 "
-                . "where md5(concat(email,'".Configuracion::PEZARANA."',login))=:id;";
+                . "where isactivo = 0 and md5(concat(email,'" . Configuracion::PEZARANA . "',login))=:id;";
+        //si quiero poner al usuario desactivado, pongo -1, no 0 si no se podria volver a dar de alta
         $parametros["id"] = $id;
         $r = $this->bd->setConsulta($sql, $parametros);
         if (!$r) {
             return -1;
         }
         return $this->bd->getNumeroFilas();
+    }
+
+    /*function activar($login) {
+        $sql = "update $this->tabla set isactivo=1 where isactivo=0 and login=:login;";
+        $parametros["login"] = $login;
+        $r = $this->bd->setConsulta($sql, $parametros);
+        if (!$r) {
+            return -1;
+        }
+        return $this->bd->getNumeroFilas();
+    }*/
+
+    function login($login, $clave) {
+        $sql = "select login from usuario where clave=:clave and isactivo=1;";
+        $parametros["clave"] = sha1($clave);
+        $r = $this->bd->setConsulta($sql, $parametros);
+        $resultado = $this->bd->getFila();
+        $loginEncontrado = $resultado[0];
+        if ($login == $loginEncontrado) {
+            return $this->get($loginEncontrado);
+        }
+        return false;
+    }
+
+    function getConsulta() {
+        
     }
 
     //le paso el id y me devuelve el objeto completo

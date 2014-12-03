@@ -1,5 +1,6 @@
 <?php
 require '../require/comun.php';
+$sesion->administrador("../usuario/");
 $bd = new BaseDatos();
 
 $login = Leer::post("login");
@@ -28,4 +29,4 @@ echo "<br/>";
 $modelo = new ModeloUsuario($bd);
 $r = $modelo->add($usuario); 
 $bd->closeConexion();
-header("Location: index.php?op=insert&r=$r");
+//header("Location: index.php?op=insert&r=$r");

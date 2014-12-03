@@ -4,14 +4,14 @@ class SesionSingleton {
 
     private static $instancia;
 
-    private function __construct($nombre="") {
+    private function __construct($nombre = "") {
         if ($nombre !== "") {
             session_name($nombre);
         }
         session_start();
     }
 
-    public static function getSesion($nombre="") {
+    public static function getSesion($nombre = "") {
         if (is_null(self::$instancia)) {
             self::$instancia = new self($nombre);
         }
@@ -22,13 +22,13 @@ class SesionSingleton {
         session_unset();
         session_destroy();
     }
-   
+
     function set($variable, $valor) {
         $_SESSION[$variable] = $valor;
     }
-   
-    function delete($variable=""){
-        if($variable===""){
+
+    function delete($variable = "") {
+        if ($variable === "") {
             unset($_SESSION);
         } else {
             unset($_SESSION[$variable]);
@@ -40,8 +40,8 @@ class SesionSingleton {
             return $_SESSION[$variable];
         return null;
     }
-   
-    function getNombres(){
+
+    function getNombres() {
         $array = array();
         foreach ($_SESSION as $key => $value) {
             $array[] = $key;
@@ -49,28 +49,42 @@ class SesionSingleton {
         return $array;
     }
 
-    function isSesion(){
-        return count($_SESSION)>0;
+    function isSesion() {
+        return count($_SESSION) > 0;
     }
 
-    function isAutentificado(){
+    function isAutentificado() {
         return isset($_SESSION["__usuario"]);
     }
 
-    function setUsuario($usuario){
-        if($usuario instanceof Usuario){
-            $this->set("__usuario",$usuario);
+    function autentificado($destino = "index.php") {
+        if (!$this->isAutentificado()) {
+            $this->redirigir($destino);
         }
     }
-   
-    function getUsuario(){
-        if($this->get("__usuario")!=null)
+
+    function administrador($destino = "index.php") {
+        $usuario = $this->getUsuario();
+        if (!$this->isAutentificado() || !$usuario->getIsroot()) {
+            $this->redirigir($destino);
+        }
+    }
+
+    function setUsuario($usuario) {
+        if ($usuario instanceof Usuario) {
+            $this->set("__usuario", $usuario);
+        }
+    }
+
+    function getUsuario() {
+        if ($this->get("__usuario") != null)
             return $this->get("__usuario");
         return null;
     }
-   
-    private function redirigir($destino="index.php"){
-        header("Location:".$destino);
+
+    function redirigir($destino = "index.php") {
+        header("Location:" . $destino);
         exit;
     }
+
 }

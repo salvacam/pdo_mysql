@@ -12,7 +12,7 @@ $bd = new BaseDatos();
 $modelo = new ModeloUsuario($bd);
 $r = $modelo->activa($id);
 if ($r == 1) {
-    header("Location:viewconfirmado.php");
-} else {    
+    header("Location:viewlogin.php");
+} else {
     header("Location:viewerror.php");
 }

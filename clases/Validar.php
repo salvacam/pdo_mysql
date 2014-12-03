@@ -36,15 +36,15 @@ class Validar {
 
     static function isDNI($v) {
         //if(self::isCondicion($v, '/^(([X-Z]{1})([-]?)(\d{7})([-]?)([A-Z]{1}))|((\d{8})([-]?)([A-Z]{1}))$/')){        
-       if(!self::isCondicion($v, '/^(\d{8})([-]?)([A-Z]{1})$/')){
+        if (!self::isCondicion($v, '/^(\d{8})([-]?)([A-Z]{1})$/')) {
             echo "numero <br/>";
-            return false;            
+            return false;
         }
-        $numeros= ["T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", 
-		"B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"];	
+        $numeros = ["T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X",
+            "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"];
         $letra = substr($v, -1, 1);
-        $numero = substr($v, 0, 8);        
-        return ($letra == $numeros[$numero%23]);
+        $numero = substr($v, 0, 8);
+        return ($letra == $numeros[$numero % 23]);
     }
 
     static function isCodigoPostal($v) {
@@ -102,9 +102,21 @@ class Validar {
     }
 
     static function isAltaUsuario($login, $clave, $claveconfirmada, $nombre, $apellidos, $correo) {
-        return self::isLogin($login) && self::isClave($clave)
-            && ($clave == $claveconfirmada) && self::isCorreo($correo) 
-            && self::isLongitudMinima($nombre, 1) && self::isLongitudMinima($apellidos, 1);
+        return self::isLogin($login) && self::isClave($clave) && ($clave == $claveconfirmada) && self::isCorreo($correo) && self::isLongitudMinima($nombre, 1) && self::isLongitudMinima($apellidos, 1);
+    }
+
+    static function enum($v, $array) {
+        foreach ($array as $valor) {
+            if ($v == $valor)
+                return true;
+        }
+        return false;
+    }
+
+    static function boolean($v) {
+        if ($v == 0 || $v == 1)
+            return true;
+        return false;
     }
 
     /*

@@ -9,3 +9,4 @@ function autoload($clase) {
 }
 
 spl_autoload_register('autoload');
+$sesion = SesionSingleton::getSesion();
