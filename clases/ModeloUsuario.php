@@ -159,7 +159,7 @@ class ModeloUsuario {
         return $this->bd->getNumeroFilas();
     }
 
-    function activa($id) {
+    function activarUser($id) {
         $sql = "update usuario "
                 . "set isactivo = 1 "
                 . "where isactivo = 0 and md5(concat(email,'" . Configuracion::PEZARANA . "',login))=:id;";

@@ -12,4 +12,5 @@ class Configuracion {
     const ORIGENHOTMAIL= "salvacams@hotmail.com";
     const CLAVEHOTMAIL= "211ProgZV";
     const RPP = 10;
+    const TIMEOUT = 1440;
 }

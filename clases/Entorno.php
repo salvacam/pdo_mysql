@@ -94,4 +94,11 @@ class Entorno {
         return $array;
     }
 
+    static function getNavegadorCliente(){
+        return $_SERVER["HTTP_USER_AGENT"];
+    }
+    
+    static function getIpCliente(){
+        return $_SERVER["REMOTE_ADDR"];
+    }
 }

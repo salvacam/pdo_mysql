@@ -15,18 +15,22 @@ $filas = $modelo->getList();
     <body>Seccion 1: Listado<br/>        
         <table border="1">  
             <tr>
-                <th>Login</th>  
-                <th>Clave</th>
-                <th>Nombre</th>
-                <th>Apellidos</th>  
+                <th>Id</th>  
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Venta</th>  <!-- alquiler o venta -->
+                <th>Precio</th>
+                <th>Hab.</th>                
+                <th>Baños</th>
+                <th>Provincia</th>
+                <th>Ciudad</th>
+                <th>Direccion</th>
                 <th>Email</th>
-                <th>Fecha Alta</th>                
-                <th>is Activo</th>
-                <th>is Root</th>
-                <th>Rol</th>
-                <th>Fecha Login</th>
+                <th>Tlf</th>
+                <th>Hora</th>                
+                <th>Activo</th>
                 <th>Borrar</th>
-                <th>Editar</th>
+                <th>Editar</th>                
             </tr>
             <?php
             foreach ($filas as $indice => $objeto) {
@@ -44,7 +48,7 @@ $filas = $modelo->getList();
                     <td><?php echo $objeto->getFechalogin(); ?></td>
                     <td><a data-id='<?php echo $objeto->getLogin(); ?>' 
                            data-nombre='<?php echo $objeto->getNombre() . " " . $objeto->getApellidos(); ?>' 
-                           class='borrar' href='phpDelete.php?login=<?php echo $objeto->getLogin(); ?>'>borrar</a></td>
+                           class='borrar' href='phpDelete.php?id=<?php echo $objeto->getLogin(); ?>'>borrar</a></td>
                     <td><a data-login='<?php echo $objeto->getLogin(); ?>'
                            href='viewEditar.php?login=<?php echo $objeto->getLogin(); ?>'>editar</a></td>
                 </tr>

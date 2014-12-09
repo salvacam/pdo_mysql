@@ -38,6 +38,8 @@ require '../require/comun.php';
         }
         
         */
+        echo "dni: ".Validar::isDNI($texto)."<br/>";
+        var_dump(Validar::isDNI($texto));
         if(Validar::isDNI($texto)){
             echo "es un dni  <br/>";
         } else {

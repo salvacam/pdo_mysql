@@ -54,6 +54,19 @@ class SesionSingleton {
     }
 
     function isAutentificado() {
+        if (Entorno::getNavegadorCliente() != $this->get("__navegador")) {
+            $this->cerrar();
+            return false;
+        }
+        if (Entorno::getIpCliente() != $this->get("__ip")) {
+            $this->cerrar();
+            return false;
+        }
+        if (time() - $this->get("__timeout") > Configuracion::TIMEOUT) {
+            $this->cerrar();
+            return false;
+        }
+        $this->set("__timeout", time());
         return isset($_SESSION["__usuario"]);
     }
 
@@ -73,6 +86,9 @@ class SesionSingleton {
     function setUsuario($usuario) {
         if ($usuario instanceof Usuario) {
             $this->set("__usuario", $usuario);
+            $this->set("__ip", Entorno::getIpCliente());
+            $this->set("__navegador", Entorno::getNavegadorCliente());
+            $this->set("__timeout", time());
         }
     }
 
