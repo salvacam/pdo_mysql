@@ -14,5 +14,6 @@ $error = Leer::get("error");
             <input type="password" name="clave" value="" id="clave" placeholder="clave" required/>
             <input type="submit" value="Login" />
         </form>
+        <a href="viewolvido.php">He olvidado mi clave</a>
     </body>
 </html>

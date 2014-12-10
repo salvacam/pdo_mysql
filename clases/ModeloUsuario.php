@@ -158,12 +158,35 @@ class ModeloUsuario {
         }
         return $this->bd->getNumeroFilas();
     }
+    
+    function fechalogin(Usuario $objeto){
+        $sql = "update $this->tabla set fechalogin=:fechalogin where login=:login";    
+        $parametros["fechalogin"]= "now()";
+        $parametros["login"]= $objeto->getLogin();
+        $r = $this->bd->setConsulta($sql, $parametros);
+        if (!$r) {
+            return -1;
+        }
+        return $this->bd->getNumeroFilas();        
+    }
 
-    function activarUser($id) {
+    function activa($id) {
         $sql = "update usuario "
                 . "set isactivo = 1 "
                 . "where isactivo = 0 and md5(concat(email,'" . Configuracion::PEZARANA . "',login))=:id;";
         //si quiero poner al usuario desactivado, pongo -1, no 0 si no se podria volver a dar de alta
+        $parametros["id"] = $id;
+        $r = $this->bd->setConsulta($sql, $parametros);
+        if (!$r) {
+            return -1;
+        }
+        return $this->bd->getNumeroFilas();
+    }
+    
+    function cambiarClave($login, $id){
+        $sql = "select * from $this->tabla "
+                . "where login=:login and md5(concat(login,'" . Configuracion::PEZARANA . "',email))=:id;";
+        $parametros["login"] = $login;
         $parametros["id"] = $id;
         $r = $this->bd->setConsulta($sql, $parametros);
         if (!$r) {
@@ -237,7 +260,7 @@ class ModeloUsuario {
         return $list;
     }
 
-    function selectHtml($id, $name, $condicion, $parametros, $orderBy = "1", $valorSeleccionado = "", $blanco = TRUE, $textoBlanco = "&nbsp") {
+    function selectHtml($id, $name, $valorSeleccionado = "", $blanco = TRUE, $textoBlanco = "&nbsp", $condicion="1=1", $parametros=array(), $orderBy = "1") {
         $select = "<select name='name' id='id'>";
         if ($blanco) {
             $select .= "<option value=''>$textoBlanco</option>";
@@ -246,7 +269,7 @@ class ModeloUsuario {
         $lista = $this->getList($condicion, $parametros, $orderBy);
         foreach ($lista as $objeto) {
             $selected = "";
-            if ($objeto->getId() == $valorSeleccionado) {
+            if ($objeto->getLogin() == $valorSeleccionado) {
                 $selected = "selected";
             }
             $select .= "<option $selected value='" . $objeto->getLogin() . "'>"
