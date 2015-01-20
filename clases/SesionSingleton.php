@@ -69,6 +69,14 @@ class SesionSingleton {
         $this->set("__timeout", time());
         return isset($_SESSION["__usuario"]);
     }
+    
+    function isAdministrador(){
+        $usuario = $this->getUsuario();
+        if (!$this->isAutentificado() || !$usuario->getIsroot()) {
+            return false;
+        }
+        return true;
+    }
 
     function autentificado($destino = "index.php") {
         if (!$this->isAutentificado()) {

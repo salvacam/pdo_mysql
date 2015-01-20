@@ -136,7 +136,7 @@ class ModeloUsuario {
         $parametros["apellidos"] = $objeto->getApellidos();
         $parametros["email"] = $objeto->getEmail();
         $parametros["loginpk"] = $loginpk;
-        
+
         return $this->editConsulta($asignacion, $condicion, $parametros);
     }
 
@@ -151,23 +151,23 @@ class ModeloUsuario {
     }
 
     function editConsulta($asignacion, $condicion = "1=1", $parametros = array()) {
-        $sql = "update $this->tabla set $asignacion where $condicion"; 
+        $sql = "update $this->tabla set $asignacion where $condicion";
         $r = $this->bd->setConsulta($sql, $parametros);
         if (!$r) {
             return -1;
         }
         return $this->bd->getNumeroFilas();
     }
-    
-    function fechalogin(Usuario $objeto){
-        $sql = "update $this->tabla set fechalogin=:fechalogin where login=:login";    
-        $parametros["fechalogin"]= "now()";
-        $parametros["login"]= $objeto->getLogin();
+
+    function fechalogin(Usuario $objeto) {
+        $sql = "update $this->tabla set fechalogin=:fechalogin where login=:login";
+        $parametros["fechalogin"] = "now()";
+        $parametros["login"] = $objeto->getLogin();
         $r = $this->bd->setConsulta($sql, $parametros);
         if (!$r) {
             return -1;
         }
-        return $this->bd->getNumeroFilas();        
+        return $this->bd->getNumeroFilas();
     }
 
     function activa($id) {
@@ -182,8 +182,8 @@ class ModeloUsuario {
         }
         return $this->bd->getNumeroFilas();
     }
-    
-    function cambiarClave($login, $id){
+
+    function cambiarClave($login, $id) {
         $sql = "select * from $this->tabla "
                 . "where login=:login and md5(concat(login,'" . Configuracion::PEZARANA . "',email))=:id;";
         $parametros["login"] = $login;
@@ -195,15 +195,15 @@ class ModeloUsuario {
         return $this->bd->getNumeroFilas();
     }
 
-    /*function activar($login) {
-        $sql = "update $this->tabla set isactivo=1 where isactivo=0 and login=:login;";
-        $parametros["login"] = $login;
-        $r = $this->bd->setConsulta($sql, $parametros);
-        if (!$r) {
-            return -1;
-        }
-        return $this->bd->getNumeroFilas();
-    }*/
+    /* function activar($login) {
+      $sql = "update $this->tabla set isactivo=1 where isactivo=0 and login=:login;";
+      $parametros["login"] = $login;
+      $r = $this->bd->setConsulta($sql, $parametros);
+      if (!$r) {
+      return -1;
+      }
+      return $this->bd->getNumeroFilas();
+      } */
 
     function login($login, $clave) {
         $sql = "select login from usuario where clave=:clave and isactivo=1;";
@@ -260,7 +260,21 @@ class ModeloUsuario {
         return $list;
     }
 
-    function selectHtml($id, $name, $valorSeleccionado = "", $blanco = TRUE, $textoBlanco = "&nbsp", $condicion="1=1", $parametros=array(), $orderBy = "1") {
+    function getListJSON($pagina = 0, $rpp= 3, $condicion = "1=1", $parametros = array(), $orderBy = "1") {
+        $pos = $pagina * $rpp;
+        $sql = "select * from $this->tabla where $condicion order by $orderBy limit $pos, $rpp";
+        $this->bd->setConsulta($sql, $parametros);
+        $r = "[";
+        while ($fila = $this->bd->getFila()) {
+            $usuario = new Usuario();
+            $usuario->set($fila);    
+            $r .= $usuario->getJSON() . ",";
+        }
+        $r = substr($r, 0, -1) . "]";
+        return $r;
+    }
+
+    function selectHtml($id, $name, $valorSeleccionado = "", $blanco = TRUE, $textoBlanco = "&nbsp", $condicion = "1=1", $parametros = array(), $orderBy = "1") {
         $select = "<select name='name' id='id'>";
         if ($blanco) {
             $select .= "<option value=''>$textoBlanco</option>";

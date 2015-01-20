@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Subir archivo Ajax</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <div>
+            <input type="text" id="texto" value="" /><br/>
+            <input type="file" id="archivo" multiple /><br/>
+            <input type="button" id="bt" value="subir" /><br/>            
+        </div>
+        <script>
+            var bt = document.getElementById("bt");
+            var archivo = document.getElementById("archivo");
+            var texto = document.getElementById("texto");
+            bt.onclick = function() {
+                var ajax, archivoactual, archivos, parametros, i, longitud;
+                archivos = archivo.files;
+                longitud = archivo.files.length;
+                if (longitud == 0) {
+                    alert("sin datos");
+                    return;
+                }
+                parametros = new FormData();
+                parametros.append("numerodearchivos", longitud);
+                parametros.append("texto", texto.value);
+                for (i = 0; i < longitud; i++) {
+                    archivoactual = archivos[i];
+                    parametros.append('archivo[]', archivoactual, archivoactual.name);
+                }
+                ajax = new XMLHttpRequest();
+                if (ajax.upload) {
+                    ajax.open("POST", "ajaxSubir.php", true);
+                    ajax.onreadystatechange = function() {
+                        if (ajax.readyState == 4) {
+                            if (ajax.status == 200) {
+                                //bien
+                                alert(ajax.responseText);
+                            } else {
+                                //mal
+                                alert(ajax.responseText);
+                            }
+                        }
+                    };
+                    ajax.send(parametros);
+                }
+            };
+        </script>                   
+    </body>
+</html>

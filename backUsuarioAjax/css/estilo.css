@@ -1,0 +1,18 @@
+#paginacion a{
+    margin-left: 5px;
+    margin-top: 5px;
+    color: black;
+    text-decoration: none;
+}
+
+#paginacion a:hover{
+    color: grey;
+}
+
+#paginacion .actual{
+    color:burlywood;
+}
+
+#paginacion{
+    text-align: center;
+}

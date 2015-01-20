@@ -15,22 +15,18 @@ $filas = $modelo->getList();
     <body>Seccion 1: Listado<br/>        
         <table border="1">  
             <tr>
-                <th>Id</th>  
-                <th>Tipo</th>
-                <th>Estado</th>
-                <th>Venta</th>  <!-- alquiler o venta -->
-                <th>Precio</th>
-                <th>Hab.</th>                
-                <th>Baños</th>
-                <th>Provincia</th>
-                <th>Ciudad</th>
-                <th>Direccion</th>
+                <th>Login</th>  
+                <th>Clave</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
                 <th>Email</th>
-                <th>Tlf</th>
-                <th>Hora</th>                
-                <th>Activo</th>
+                <th>FechaAlta</th>                
+                <th>IsActivo</th>
+                <th>IsRoot</th>
+                <th>Rol</th>
+                <th>Fecha Login</th>
                 <th>Borrar</th>
-                <th>Editar</th>                
+                <th>Editar</th>
             </tr>
             <?php
             foreach ($filas as $indice => $objeto) {
